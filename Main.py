@@ -232,6 +232,15 @@ def sideglance(ctx):
 
 @bot.command(pass_context=True)
 @asyncio.coroutine    
+def thonk(ctx):
+    """
+    when thonking consumes you
+    """
+    yield from bot.send_message(ctx.message.channel, "https://i.imgur.com/VADGUwj.gifv")
+    yield from bot.delete_message(ctx.message)
+
+@bot.command(pass_context=True)
+@asyncio.coroutine    
 def ye(ctx):
     """
     Better Call Saul is awesome
@@ -262,6 +271,11 @@ def lmao(ctx):
 def chirp():
     """:^)"""
     yield from bot.say('CHIRP CHIRP')
+    
+@bot.command()
+@asyncio.coroutine
+def exam():
+    yield from bot.say('https://www.mcgill.ca/students/exams/files/students.exams/december_2017_final_schedule_with_room_locations_12.pdf')
 
 @bot.command(pass_context=True)
 @asyncio.coroutine
@@ -575,12 +589,22 @@ def q(str1: str=None, *, str2: str=None):
         argl = [str1, str2]
         args = ' '.join(argl)
     if (args[1] == '@'):    # member argument supplied
+<<<<<<< HEAD
         if numArgs == 2:    # has query
             args = args.split() 
             t = ((args[0][3:(len(args[0])-1)]), '%'+(' '.join(args[1:]))+'%')
+=======
+        args = args.split() 
+        qId = ''
+        for i in range(len(args[0])):
+            if (args[0][i] in '0123456789'):
+                qId = qId + args[0][i]
+        if numArgs == 2:    # query
+            t = (qId, '%'+(' '.join(args[1:]))+'%')
+>>>>>>> 123fba82aa9c283d4ea6fd1cf581ff1638094862
             quoteslist = c.execute('SELECT Quote FROM Quotes WHERE ID=? AND Quote LIKE ?',t).fetchall()
         else:   # no query
-            t = ((args[3:(len(args[0])-2)]),)
+            t = (qId,)
             quoteslist = c.execute('SELECT Quote FROM Quotes WHERE ID=?',t).fetchall()
         if not quoteslist:  # no result
             yield from bot.say('No quotes found.')
@@ -608,7 +632,6 @@ def q(str1: str=None, *, str2: str=None):
 @bot.command(pass_context=True)
 @asyncio.coroutine
 def lq(ctx, str1: str=None):
-	count = 0
 	if str1 is None:
 		member = ctx.message.author
 		t = (member.id,)
