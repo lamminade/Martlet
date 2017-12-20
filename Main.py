@@ -539,6 +539,8 @@ def on_message(message):
         yield from bot.send_message(message.channel, ":c")
     if message.content == "worm":
         yield from bot.send_message(message.channel, "walk without rhythm, and it won't attract the worm.")
+    if message.content == "hey":
+    	yield from bot.send_message(message.channel, "whats going on?")
     yield from bot.process_commands(message)
 
 # Quote Database Commands
@@ -555,7 +557,7 @@ def addq(ctx, member: discord.Member, *, quote: str):
 
 @bot.command()
 @asyncio.coroutine
-def q(str1: str=None, *, str2: str=None):   #member: discord.Member=None, *, query: str=None):
+def q(str1: str=None, *, str2: str=None):   
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     if str1 is None:    # no argument
@@ -573,7 +575,7 @@ def q(str1: str=None, *, str2: str=None):   #member: discord.Member=None, *, que
         argl = [str1, str2]
         args = ' '.join(argl)
     if (args[1] == '@'):    # member argument supplied
-        if numArgs == 2:    # query
+        if numArgs == 2:    # has query
             args = args.split() 
             t = ((args[0][3:(len(args[0])-1)]), '%'+(' '.join(args[1:]))+'%')
             quoteslist = c.execute('SELECT Quote FROM Quotes WHERE ID=? AND Quote LIKE ?',t).fetchall()
@@ -603,18 +605,23 @@ def q(str1: str=None, *, str2: str=None):   #member: discord.Member=None, *, que
             conn.close()
             return
 
-@bot.command()
+@bot.command(pass_context=True)
 @asyncio.coroutine
-def lq(member: discord.Member):
+def lq(ctx, str1: str=None):
+	count = 0
+	if str1 is None:
+		member = ctx.message.author
+		t = (member.id,)
+	else:
+		t = ((str1[3:(len(str1[0])-2)]),)
 	conn = sqlite3.connect(DB_PATH)	
 	c = conn.cursor()
-	t = (member.id,)
 	quoteslist = c.execute('SELECT Quote FROM Quotes WHERE ID=?',t).fetchall()
 	msg = "```Quotes: \n"
 	for i in range(len(quoteslist)):
 		if ((len(msg) + len('[%d] %s\n' % (i+1, quoteslist[i][0]))) > 1996):
 			msg += '```'
-			yield from bot.say(msg)
+			yield from bot.say(msg, delete_after=30)
 			msg = '```[%d] %s\n' % (i+1, quoteslist[i][0])
 		else:  
 			msg += '[%d] %s\n' % (i+1, quoteslist[i][0])
