@@ -589,11 +589,9 @@ def q(str1: str=None, *, str2: str=None):
         argl = [str1, str2]
         args = ' '.join(argl)
     if (args[1] == '@'):    # member argument supplied
-<<<<<<< HEAD
         if numArgs == 2:    # has query
             args = args.split() 
             t = ((args[0][3:(len(args[0])-1)]), '%'+(' '.join(args[1:]))+'%')
-=======
         args = args.split() 
         qId = ''
         for i in range(len(args[0])):
@@ -601,7 +599,6 @@ def q(str1: str=None, *, str2: str=None):
                 qId = qId + args[0][i]
         if numArgs == 2:    # query
             t = (qId, '%'+(' '.join(args[1:]))+'%')
->>>>>>> 123fba82aa9c283d4ea6fd1cf581ff1638094862
             quoteslist = c.execute('SELECT Quote FROM Quotes WHERE ID=? AND Quote LIKE ?',t).fetchall()
         else:   # no query
             t = (qId,)
@@ -674,7 +671,7 @@ def delq(ctx):
 		for i in range(len(quoteslist)):
 			if ((len(msg) + len('[%d] %s\n' % (i+1, quoteslist[i][0]))) > 1996):
 				msg += '```'
-				yield from bot.say(msg)
+				yield from bot.say(msg, delete_after=30)
 				msg = '```[%d] %s\n' % (i+1, quoteslist[i][0])
 			else:  
 				msg += '[%d] %s\n' % (i+1, quoteslist[i][0])
