@@ -731,7 +731,7 @@ def ranking(ctx):
 	table = []
 	for (ID, DisplayName, Upmartlet) in members:
 		table.append((DisplayName, Upmartlet))
-	yield from bot.say(ctx.message.channel, '```Java\n'+tabulate(table, headers=["NAME","#"], tablefmt="fancy_grid")+'```', delete_after=30)
+	yield from bot.say('```Java\n'+tabulate(table, headers=["NAME","#"], tablefmt="fancy_grid")+'```', delete_after=30)
 
 @bot.event
 @asyncio.coroutine
